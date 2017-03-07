@@ -1,0 +1,4 @@
+"0","max <- fronteras %>% "
+"0","  group_by(Frontera) %>% "
+"0","  summarise(max(Risk))"
+"0","vect <- max[[""max(Risk)""]]"

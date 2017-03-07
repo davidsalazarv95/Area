@@ -1,0 +1,110 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+```
+
+
+
+```{r}
+Ejemplo <- read_csv("~/Desktop/Regressions/Area/Ejemplo.csv", 
+    col_types = cols(EEB = col_double(), 
+        NUTRESA = col_double(), PFCEMARGOS = col_double(), 
+        PFGRUPOARG = col_double(), PFGRUPSURA = col_double(), 
+        `RENTA ACCIONES` = col_double(), 
+        `RENTA VARIABLE COLOMBIA` = col_double(), 
+        Return = col_double()))
+Ejemplo
+```
+
+
+
+```{r}
+(datos <- Ejemplo %>%
+  gather(key = 'asset', value = 'allocation', -1) %>% 
+  arrange(Return))
+```
+
+```{r}
+unique(datos$Return)
+```
+
+
+```{r}
+library(ggthemes)
+library(ggrepel)
+library(forcats)
+```
+
+```{r}
+datos %>% 
+  filter(allocation > 0.0005) %>% 
+  ggplot(mapping = aes(x = Return, y = allocation)) +
+    geom_area(aes(x = Return, y = allocation, fill = fct_reorder(factor(asset), allocation, .desc = TRUE))) +
+    theme_minimal() +
+    scale_fill_gdocs() +
+    scale_y_continuous(labels = scales::percent) +
+    scale_x_continuous(labels = scales::percent) +
+    guides(fill=guide_legend(title = "Activo")) +
+    geom_label_repel(data = filter(datos, Return == 0.105),aes(x = Return, y = allocation, label = asset))
+```
+
+```{r}
+datos %>% 
+  ggplot(mapping = aes(x = Return, y = allocation)) +
+    geom_area(aes(x = Return, y = allocation, fill = fct_reorder(factor(asset), allocation, .desc = TRUE))) +
+    theme_minimal() +
+    scale_fill_gdocs(breaks = c(levels(fct_reorder(factor(datos$asset), datos$allocation, .desc = TRUE))[1:9])) +
+    scale_y_continuous(labels = scales::percent) +
+    scale_x_continuous(labels = scales::percent) +
+    guides(fill=guide_legend(title = "Activo")) +
+    labs(x = "Retorno",
+         title = "Frontera sin Balanceados ni Alta Convicción",
+         subtitle = "Asset Allocation por nivel de retorno",
+         y = "Allocation")
+```
+
+```{r}
+source("chart_area.R")
+```
+
+
+
+```{r}
+chart_area(Ejemplo2, "Frontera Todos los Activos")
+ggsave("Todos Activos.pdf", width = 10, height = 8)
+```
+
+
+
+
+
+```{r}
+fronteras <- read_csv("fronteras.csv")
+library(tidyverse)
+tail(fronteras)
+```
+
+```{r}
+max <- fronteras %>% 
+  group_by(Frontera) %>% 
+  summarise(max(Risk))
+vect <- max[["max(Risk)"]]
+```
+
+
+
+```{r}
+fronteras %>% 
+  ggplot(mapping = aes(x = Risk, y = Return, color = factor(Frontera))) +
+  geom_smooth(method = "gam", formula = y ~ (log(x)), se = FALSE, size = 0.5) +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::percent) +
+  scale_x_continuous(labels = scales::percent) +
+  scale_color_gdocs()
+```
+

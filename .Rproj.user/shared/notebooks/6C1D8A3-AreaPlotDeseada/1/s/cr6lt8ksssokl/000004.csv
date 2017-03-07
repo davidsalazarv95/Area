@@ -1,0 +1,8 @@
+"0","Ejemplo <- read_csv(""~/Desktop/Regressions/Area/Ejemplo.csv"", "
+"0","    col_types = cols(EEB = col_double(), "
+"0","        NUTRESA = col_double(), PFCEMARGOS = col_double(), "
+"0","        PFGRUPOARG = col_double(), PFGRUPSURA = col_double(), "
+"0","        `RENTA ACCIONES` = col_double(), "
+"0","        `RENTA VARIABLE COLOMBIA` = col_double(), "
+"0","        Return = col_double()))"
+"0","Ejemplo"

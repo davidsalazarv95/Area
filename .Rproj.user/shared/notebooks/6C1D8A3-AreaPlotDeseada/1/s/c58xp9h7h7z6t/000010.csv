@@ -1,0 +1,10 @@
+"0","fronteras <- read_csv(""fronteras.csv"")"
+"2","Parsed with column specification:
+cols(
+  Risk = col_double(),
+  Return = col_double(),
+  Frontera = col_integer()
+)
+"
+"0","library(tidyverse)"
+"0","tail(fronteras)"

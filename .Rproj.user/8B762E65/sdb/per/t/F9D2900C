@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "chart_area <- function(df, frontier_name, num_assets = 9) {\n  ####\n  # df: Dataframe\n  # frontier_name: string\n  # num_assets: integer. Number of assets displayed on legend. \n  \n  \n  # Load required packages\n  library(tidyverse)\n  library(ggthemes)\n  library(forcats)\n  \n  # Tidy format\n  datos <- df %>%\n     gather(key = 'asset', value = 'allocation', -1) %>% \n     arrange(Return)\n  \n  # Plot\n  plot <- datos %>% \n    ggplot(mapping = aes(x = Return, y = allocation)) +\n    geom_area(aes(x = Return, y = allocation, fill = fct_reorder(factor(asset), allocation, .desc = TRUE))) +\n    theme_minimal(legend.position = \"top\") +\n    scale_fill_gdocs(breaks = c(levels(fct_reorder(factor(datos$asset), datos$allocation, .desc = TRUE))[1:num_assets])) +\n    scale_y_continuous(labels = scales::percent) +\n    scale_x_continuous(labels = scales::percent) +\n    guides(fill=guide_legend(title = \"Activo\")) +\n    labs(x = \"Retorno\",\n         title = frontier_name,\n         subtitle = \"Asset Allocation por nivel de retorno\",\n         y = \"Allocation\")\n  plot\n}",
+    "created" : 1488669473895.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3841550302",
+    "id" : "F9D2900C",
+    "lastKnownWriteTime" : 1488670774,
+    "last_content_update" : 1488670774040,
+    "path" : "~/Desktop/Regressions/Area/chart_area.R",
+    "project_path" : "chart_area.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

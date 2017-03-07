@@ -1,0 +1,3 @@
+"0","(datos <- Ejemplo %>%"
+"0","  gather(key = 'asset', value = 'allocation', -1) %>% "
+"0","  arrange(Return))"

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"R Notebook\"\noutput: html_notebook\n---\n\n\n```{r}\nlibrary(tidyverse)\n```\n\n\n\n```{r}\nEjemplo <- read_csv(\"~/Desktop/Regressions/Area/Ejemplo.csv\", \n    col_types = cols(EEB = col_double(), \n        NUTRESA = col_double(), PFCEMARGOS = col_double(), \n        PFGRUPOARG = col_double(), PFGRUPSURA = col_double(), \n        `RENTA ACCIONES` = col_double(), \n        `RENTA VARIABLE COLOMBIA` = col_double(), \n        Return = col_double()))\nEjemplo\n```\n\n\n\n```{r}\n(datos <- Ejemplo %>%\n  gather(key = 'asset', value = 'allocation', -1) %>% \n  arrange(Return))\n```\n\n```{r}\nunique(datos$Return)\n```\n\n\n```{r}\nlibrary(ggthemes)\nlibrary(ggrepel)\nlibrary(forcats)\n```\n\n```{r}\ndatos %>% \n  filter(allocation > 0.0005) %>% \n  ggplot(mapping = aes(x = Return, y = allocation)) +\n    geom_area(aes(x = Return, y = allocation, fill = fct_reorder(factor(asset), allocation, .desc = TRUE))) +\n    theme_minimal() +\n    scale_fill_gdocs() +\n    scale_y_continuous(labels = scales::percent) +\n    scale_x_continuous(labels = scales::percent) +\n    guides(fill=guide_legend(title = \"Activo\")) +\n    geom_label_repel(data = filter(datos, Return == 0.105),aes(x = Return, y = allocation, label = asset))\n```\n\n```{r}\ndatos %>% \n  ggplot(mapping = aes(x = Return, y = allocation)) +\n    geom_area(aes(x = Return, y = allocation, fill = fct_reorder(factor(asset), allocation, .desc = TRUE))) +\n    theme_minimal() +\n    scale_fill_gdocs(breaks = c(levels(fct_reorder(factor(datos$asset), datos$allocation, .desc = TRUE))[1:9])) +\n    scale_y_continuous(labels = scales::percent) +\n    scale_x_continuous(labels = scales::percent) +\n    guides(fill=guide_legend(title = \"Activo\")) +\n    labs(x = \"Retorno\",\n         title = \"Frontera sin Balanceados ni Alta Convicción\",\n         subtitle = \"Asset Allocation por nivel de retorno\",\n         y = \"Allocation\")\n```\n\n```{r}\nsource(\"chart_area.R\")\n```\n\n\n\n```{r}\nchart_area(Ejemplo2, \"Frontera Todos los Activos\")\nggsave(\"Todos Activos.pdf\", width = 10, height = 8)\n```\n\n\n\n\n\n```{r}\nfronteras <- read_csv(\"fronteras.csv\")\nlibrary(tidyverse)\ntail(fronteras)\n```\n\n```{r}\nmax <- fronteras %>% \n  group_by(Frontera) %>% \n  summarise(max(Risk))\nvect <- max[[\"max(Risk)\"]]\n```\n\n\n\n```{r}\nfronteras %>% \n  ggplot(mapping = aes(x = Risk, y = Return, color = factor(Frontera))) +\n  geom_smooth(method = \"gam\", formula = y ~ (log(x)), se = FALSE, size = 0.5) +\n  theme_minimal() +\n  scale_y_continuous(labels = scales::percent) +\n  scale_x_continuous(labels = scales::percent) +\n  scale_color_gdocs()\n```\n\n",
+    "created" : 1488640174506.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4016813091",
+    "id" : "A2386E74",
+    "lastKnownWriteTime" : 1488762632,
+    "last_content_update" : 1488762637708,
+    "path" : "~/Desktop/Regressions/Area/AreaPlotDeseada.Rmd",
+    "project_path" : "AreaPlotDeseada.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
